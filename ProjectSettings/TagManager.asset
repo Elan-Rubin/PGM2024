@@ -44,3 +44,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 186507281
+    locked: 0
+  - name: Level
+    uniqueID: 2667390809
+    locked: 0
+  - name: Hole
+    uniqueID: 192371525
+    locked: 0
+  - name: Ball
+    uniqueID: 615913325
+    locked: 0
+  - name: Golfer
+    uniqueID: 2787725791
+    locked: 0

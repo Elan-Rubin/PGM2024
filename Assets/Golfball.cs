@@ -6,6 +6,8 @@ public class Golfball : MonoBehaviour
 {
     private Golfer cachedGolfer;
     private Golfhole cachedGolfhole;
+    private Vector2 golfHolePosition;
+    private Vector2 golferPosition; //this will still need to update
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] LineRenderer lr;
@@ -18,34 +20,83 @@ public class Golfball : MonoBehaviour
     private bool isDragging;
     private bool inHole;
 
+    private float normalDrag;
+
     void Start()
     {
-        
+        normalDrag = rb.drag;
     }
 
     void Update()
     {
-        PlayerInput();   
+        Debug.Log(rb.velocity.magnitude);
+
+        PlayerInput();
+
+        /*var dist = Vector2.Distance(transform.position, golfHolePosition);
+        if (dist < 2f && rb.velocity.magnitude > 1f)
+        {
+            transform.position = Vector2.Lerp(transform.position, golfHolePosition, Time.deltaTime * 1f * (dist / 2f) * (rb.velocity.magnitude / 1f));
+        }*/
+        var v = rb.velocity.magnitude;
+        if (v < 0.4f)
+            rb.velocity = Vector2.zero; 
+        else if(v < 2f)
+        {
+            rb.drag += Time.deltaTime * 2f;
+        }
+
+        if (inHole)
+        {
+            transform.position = Vector2.Lerp(transform.position, golfHolePosition, Time.deltaTime * 10f);
+        }
+    }
+
+    private bool IsReady()
+    {
+        return rb.velocity.magnitude < 0.2f;
     }
 
     private void PlayerInput()
     {
+        if (!IsReady()) return;
+
         Vector2 inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float distance = Vector2.Distance(transform.position, inputPos);
 
-        if (UnityEngine.Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart();
-        if (Input.GetMouseButton(0) && isDragging) DragChange();
-        //CHANGE THIS DRAGRELEASE
-        if (Input.GetMouseButtonUp(0) && isDragging) DragRelease(Vector2.zero);
+        if (Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart();
+        if (Input.GetMouseButton(0) && isDragging) DragChange(inputPos);
+        if (Input.GetMouseButtonUp(0) && isDragging) DragRelease(inputPos);
     }
 
-    private void DragStart() => isDragging = true;
-    private void DragChange() { }
+    private void DragStart()
+    {
+        if (inHole) return;
+
+        Golfer.Instance.StartRotating();
+
+        rb.drag = normalDrag;
+
+        isDragging = true;
+        lr.positionCount = 2;
+
+    }
+    private void DragChange(Vector2 pos)
+    {
+        if (inHole) return;
+
+        Vector2 dir = (Vector2)transform.position - pos;
+        lr.SetPosition(0, transform.position);
+        lr.SetPosition(1, (Vector2)transform.position + Vector2.ClampMagnitude(dir * power / 2, maxPower / 2));
+    }
     private void DragRelease(Vector2 pos)
     {
+        Golfer.Instance.StopRotating();
+
         float distance = Vector2.Distance((Vector2)transform.position, pos);
         isDragging = false;
-        if(distance < 1f)
+        lr.positionCount = 0;
+        if (distance < 1f)
         {
             return;
         }
@@ -53,9 +104,31 @@ public class Golfball : MonoBehaviour
         rb.velocity = Vector2.ClampMagnitude(dir * power, maxPower);
     }
 
-    public void InitializeGolfball()
+    public void InitializeGolfball(Golfhole gh)
     {
         cachedGolfer = Golfer.Instance;
-        cachedGolfhole = GameManager.Instance.GetCurrentLevel().Golfhole;
+        cachedGolfhole = gh;
+        golfHolePosition = gh.transform.position;
+    }
+
+    private void CheckWinState()
+    {
+        if (inHole) return;
+
+        if (rb.velocity.magnitude <= maxGoalSpeed)
+        {
+            inHole = true;
+            rb.velocity = Vector2.zero;
+            //gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag.Equals("Golfhole")) CheckWinState();
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag.Equals("Golfhole")) CheckWinState();
     }
 }

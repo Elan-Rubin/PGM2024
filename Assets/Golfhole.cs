@@ -16,9 +16,9 @@ public class Golfhole : MonoBehaviour
         
     }
 
-    public void InitializeGolfhole()
+    public void InitializeGolfhole(Golfball gb)
     {
         cachedGolfer = Golfer.Instance;
-        cachedGolfball = GameManager.Instance.GetCurrentLevel().Golfball;
+        cachedGolfball = gb;
     }
 }

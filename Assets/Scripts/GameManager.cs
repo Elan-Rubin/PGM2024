@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameObject levelsParent; 
     [SerializeField] private List<Level> levels = new();
     private int levelIndex = 0;
     public Level GetCurrentLevel()
@@ -38,37 +42,62 @@ public class GameManager : MonoBehaviour
 
     private void InitializeLevels()
     {
-        foreach (var l in levels)
+        foreach(Transform child in levelsParent.transform)
         {
-            var h = HelperClass.FindChildWithTag(l.LevelGO, "Golfhole");
-            var b = HelperClass.FindChildWithTag(l.LevelGO, "Golfball");
-            l.Initializelevel(h.GetComponent<Golfhole>(), b.GetComponent<Golfball>());
+            var n = child.name;
+            var g = child.gameObject;
+            var h = HelperClass.FindChildWithTag(child.gameObject, "Golfhole");
+            var b = HelperClass.FindChildWithTag(child.gameObject, "Golfball");
+
+            var l = new Level(n, g, h.GetComponent<Golfhole>(), b.GetComponent<Golfball>());
+            levels.Add(l);
         }
+
+        foreach(var l in levels)
+        {
+            Debug.Log(l.ToString());
+        }
+        LevelStart();
     }
 
-    public void LevelCompleted()
+    private void LevelStart()
+    {
+        var l = levels[levelIndex];
+        Debug.Log(l.ToString());
+        Debug.Log(GetCurrentLevel().ToString());
+        l.Golfhole.InitializeGolfhole(l.Golfball);
+        l.Golfball.InitializeGolfball(l.Golfhole);
+        Golfer.Instance.InitializeGolfer(l.Golfhole, l.Golfball); 
+    }
+
+    public void LevelComplete()
     {
         LevelCompletedEvent.Invoke();
 
-
+        levelIndex++;
     }
 
     [System.Serializable]
-    public struct Level
+    public class Level
     {
         private string name;
         [SerializeField] private string levelName;
         [SerializeField] private GameObject levelGO;
         public GameObject LevelGO { get { return levelGO; } }
-        private Golfball ball;
-        public Golfball Golfball { get { return ball; } set { ball = value; } }
-        private Golfhole hole;
-        public Golfhole Golfhole { get { return hole; } set { hole = value; } }
+        public Golfball Golfball;
+        public Golfhole Golfhole;
 
-        public void Initializelevel(Golfhole hole, Golfball ball)
+        public Level(string name, GameObject GO, Golfhole hole, Golfball ball)
         {
+            levelName = name;
+            levelGO = GO;
             Golfhole = hole;
             Golfball = ball;
+        }
+
+        public override string ToString()
+        {
+            return $"Level: {levelName}, golfhole: {Golfhole.transform.position}, golfball: {Golfball.transform.position}.";
         }
     }
 }
