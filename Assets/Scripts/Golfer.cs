@@ -13,8 +13,13 @@ public class Golfer : MonoBehaviour
     private Transform rotatorChild;
     private Transform rotatorParent;
     private Vector2 cachedOffset;
+    private SpriteRenderer golferSR;
 
     bool rotating = false;
+
+    private int animationFrame;
+    private int selectedAnimation;
+    private List<List<AnimationFrames>> animations = new();
 
     private static Golfer instance;
     public static Golfer Instance { get { return instance; } }
@@ -26,12 +31,14 @@ public class Golfer : MonoBehaviour
     }
     void Start()
     {
-
+        golferSR = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        if (!rotating) return;
+        golferSR.flipY = false;
+        if (!rotating) return; //this is bad code
+        golferSR.flipY = transform.position.x > cachedGolfBall.transform.position.x;
 
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 5.23f;
@@ -96,7 +103,6 @@ public class Golfer : MonoBehaviour
 
     public void StopRotating()
     {
-
         //maybe wait a second first??
         rotating = false;
         transform.parent = null;
@@ -104,5 +110,10 @@ public class Golfer : MonoBehaviour
         transform.DOMove(positionBeforeRotating, 0.25f);
         //transform.rotation = Quaternion.Euler(0, 0, 0);
         transform.DORotate(new Vector3(0,0,0), 0.25f);
+    }
+    [System.Serializable]
+    public struct AnimationFrames
+    {
+        public List<Sprite> Frames;
     }
 }

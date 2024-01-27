@@ -37,7 +37,12 @@ public class CameraManager : MonoBehaviour
         //value = Mathf.Log(value);
         targetSize = (maxSize - minSize) * value + minSize;
         //targetSize = (value - minSize) / (maxSize - minSize);
-        Debug.Log(targetSize);
+    }
+
+    private void LateUpdate()
+    {
+        var pos = transform.position;
+        transform.position = new Vector3(pos.x, pos.y, -10);
     }
 
     public void CenterCamera()
@@ -50,6 +55,7 @@ public class CameraManager : MonoBehaviour
     public void MoveCamera(Vector3 pos)
     {
         pos = new Vector3(pos.x, pos.y, camZ);
+        //no idea why this line doesnt work
         transform.DOMove(pos, Vector2.Distance(transform.position, pos) / 4f).SetEase(Ease.Linear);
     }
 }
