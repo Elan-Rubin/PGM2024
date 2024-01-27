@@ -39,14 +39,18 @@ public class Golfball : MonoBehaviour
         {
             transform.position = Vector2.Lerp(transform.position, golfHolePosition, Time.deltaTime * 1f * (dist / 2f) * (rb.velocity.magnitude / 1f));
         }*/
-        var v = rb.velocity.magnitude;
-        if (v < 0.4f)
-            rb.velocity = Vector2.zero;
-        else if (v < 2f)
-        {
-            rb.drag += Time.deltaTime * 2f;
-        }
 
+        if(Vector2.Distance(transform.position, golfHolePosition) > 1)
+        {
+            var v = rb.velocity.magnitude;
+            if (v < 0.4f)
+                rb.velocity = Vector2.zero;
+            else if (v < 2f)
+            {
+                rb.drag += Time.deltaTime * 2f;
+            }
+        }
+        
         if (inHole)
         {
             transform.position = Vector2.Lerp(transform.position, golfHolePosition, Time.deltaTime * 10f);
@@ -60,6 +64,7 @@ public class Golfball : MonoBehaviour
             if (!isReady && hitCounter > 0)
             {
                 Golfer.Instance.MoveToBall();
+                CameraManager.Instance.CenterCamera();
             }
             isReady = true;
             return true;
@@ -98,14 +103,19 @@ public class Golfball : MonoBehaviour
         Vector2 dir = (Vector2)transform.position - pos;
         lr.SetPosition(0, transform.position);
         lr.SetPosition(1, (Vector2)transform.position + Vector2.ClampMagnitude(dir * power / 2, maxPower / 2));
-
+        
         var pow = Vector2.ClampMagnitude(dir * power / 2, maxPower / 2).magnitude;
         UIManager.Instance.UpdatePower(pow*2 / maxPower);
+        var cam = CameraManager.Instance;
+        cam.UpdateSize(pow * 2 / maxPower);
     }
     private void DragRelease(Vector2 pos)
     {
         UIManager.Instance.UpdateStroke(++hitCounter);
         UIManager.Instance.UpdatePower(0);
+        UIManager.Instance.BounceGolfer();
+
+        CameraManager.Instance.ResetSize();
 
         isReady = false;    
 

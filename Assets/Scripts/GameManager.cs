@@ -51,10 +51,10 @@ public class GameManager : MonoBehaviour
             levels.Add(l);
         }
 
-        foreach(var l in levels)
+        /*foreach(var l in levels)
         {
             Debug.Log(l.ToString());
-        }
+        }*/
         LevelStart();
     }
 
@@ -63,7 +63,8 @@ public class GameManager : MonoBehaviour
         var l = levels[levelIndex];
         l.Golfhole.InitializeGolfhole(l.Golfball);
         l.Golfball.InitializeGolfball(l.Golfhole);
-        Golfer.Instance.InitializeGolfer(l.Golfhole, l.Golfball); 
+        Golfer.Instance.InitializeGolfer(l.Golfhole, l.Golfball);
+        CameraManager.Instance.CenterCamera();
     }
 
     public void LevelComplete()

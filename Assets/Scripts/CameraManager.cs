@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,10 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     private Camera cam;
+    private float camZ;
     private float defaultSize;
+    private float currentSize, targetSize;
+    [SerializeField] private float minSize = 3.5f, maxSize = 10;
 
     private static CameraManager instance;
     public static CameraManager Instance { get { return instance; } }
@@ -17,17 +21,35 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        defaultSize = cam.orthographicSize;
+        currentSize = targetSize = defaultSize = cam.orthographicSize;
+        camZ = -10;
     }
 
     void Update()
     {
-        
+        currentSize = cam.orthographicSize = Mathf.Lerp(currentSize, targetSize, Time.deltaTime * 2f);
     }
 
-    public void ResetSize() => UpdateSize(defaultSize);
+    public void ResetSize() => targetSize = defaultSize;
+    //this takes a value from 0 to 1
     public void UpdateSize(float value)
     {
-        cam.orthographicSize = value;
+        //value = Mathf.Log(value);
+        targetSize = (maxSize - minSize) * value + minSize;
+        //targetSize = (value - minSize) / (maxSize - minSize);
+        Debug.Log(targetSize);
+    }
+
+    public void CenterCamera()
+    {
+        var l = GameManager.Instance.GetCurrentLevel();
+        var h = l.Golfhole.transform.position;
+        var b = l.Golfball.transform.position;
+        MoveCamera((h+b)/2f);
+    }
+    public void MoveCamera(Vector3 pos)
+    {
+        pos = new Vector3(pos.x, pos.y, camZ);
+        transform.DOMove(pos, Vector2.Distance(transform.position, pos) / 4f).SetEase(Ease.Linear);
     }
 }

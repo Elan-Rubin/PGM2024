@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image powerCircle;
     private float currentFill, targetFill;
     [SerializeField] private TextMeshProUGUI strokeText;
+    [SerializeField] private Image golferImage;
     private static UIManager instance;
     public static UIManager Instance { get { return instance; } }
     private void Awake()
@@ -39,6 +40,15 @@ public class UIManager : MonoBehaviour
     public void UpdateStroke(int value)
     {
         strokeText.text = $"Stroke: {value:00}";
-        strokeText.transform.DOPunchScale(Vector2.one * 0.1f, 0.1f);
+        strokeText.transform.DOPunchScale(Vector2.one * 0.15f, 0.1f);
+    }
+
+    public void BounceGolfer()
+    {
+        golferImage.transform.DOPunchScale(Vector2.one * 0.15f, 0.1f);
+        golferImage.transform.DOShakePosition(0.15f, 5).OnComplete(() =>
+        {
+            golferImage.transform.localPosition = Vector2.zero;
+        });
     }
 }
