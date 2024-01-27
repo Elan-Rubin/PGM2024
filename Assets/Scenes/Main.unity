@@ -5749,6 +5749,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723c1c0bfa2d8714da0f1f7d64d8d722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animations:
+  - Frames:
+    - {fileID: 1226232127, guid: 29d5d33758eec974cb26a9ac0f4bdd47, type: 3}
+    - {fileID: -572348380, guid: 29d5d33758eec974cb26a9ac0f4bdd47, type: 3}
+    - {fileID: -1509209136, guid: 29d5d33758eec974cb26a9ac0f4bdd47, type: 3}
+    - {fileID: -637793031, guid: 29d5d33758eec974cb26a9ac0f4bdd47, type: 3}
+    - {fileID: -945458434, guid: 29d5d33758eec974cb26a9ac0f4bdd47, type: 3}
+    - {fileID: -1469087891, guid: 29d5d33758eec974cb26a9ac0f4bdd47, type: 3}
 --- !u!4 &907242687
 Transform:
   m_ObjectHideFlags: 0
@@ -7170,9 +7178,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volumeMultiplier: 1
   soundEffects:
-  - SoundName: 
-    Clips: []
+  - SoundName: golfHit
+    Clips:
+    - {fileID: 8300000, guid: 89a4915e05af71a4e9b523402bb0aa36, type: 3}
+    - {fileID: 8300000, guid: 33fde987ccf03ba4283cafa76d969292, type: 3}
+    - {fileID: 8300000, guid: e80b0b13ede61d14aa55e779a39dc07f, type: 3}
+    - {fileID: 8300000, guid: ce4a5b505dc8c0e458b42f32a17765c6, type: 3}
+    - {fileID: 8300000, guid: de117c10e95d33441a9e24a8cc41a943, type: 3}
+    - {fileID: 8300000, guid: 645ead5b60fd2834ea806089d974b8c4, type: 3}
+    - {fileID: 8300000, guid: 005e7543432801746b66bd0156674128, type: 3}
+    - {fileID: 8300000, guid: e075a8243d897c14fae5e8e877beea9d, type: 3}
     Volume: 1
+    Vary: 0
+  - SoundName: golfHole
+    Clips:
+    - {fileID: 8300000, guid: 30e76fbb195d0cf45bc1f16bd522c850, type: 3}
+    - {fileID: 8300000, guid: 5d11423ec5e995d49998a5c8e3b01891, type: 3}
+    - {fileID: 8300000, guid: ad2e17c01588fdf4f9c769e67bdeb68d, type: 3}
+    Volume: 1
+    Vary: 0
+  - SoundName: beep
+    Clips:
+    - {fileID: 8300000, guid: 2e313d97850813345827fca396447d8b, type: 3}
+    Volume: 1
+    Vary: 0
+  - SoundName: explosion
+    Clips:
+    - {fileID: 8300000, guid: 9abaa27603bf13747b0bad08c39a119b, type: 3}
+    Volume: 0.683
+    Vary: 0
+  - SoundName: golfBall
+    Clips:
+    - {fileID: 8300000, guid: ac7ce3fb8b7627240bc1ca8f7be19725, type: 3}
+    - {fileID: 8300000, guid: 0980b05cd2e0834468f4cc068cb85275, type: 3}
+    Volume: 0.683
     Vary: 0
 --- !u!1 &1745349314
 GameObject:

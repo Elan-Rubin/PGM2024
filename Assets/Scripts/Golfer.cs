@@ -19,7 +19,7 @@ public class Golfer : MonoBehaviour
 
     private int animationFrame;
     private int selectedAnimation;
-    private List<List<AnimationFrames>> animations = new();
+    [SerializeField] private List<AnimationFrames> animations = new();
 
     private static Golfer instance;
     public static Golfer Instance { get { return instance; } }
@@ -36,6 +36,8 @@ public class Golfer : MonoBehaviour
 
     void Update()
     {
+        golferSR.sprite = animations[selectedAnimation].Frames[animationFrame];
+
         golferSR.flipY = false;
         if (!rotating) return; //this is bad code
         golferSR.flipY = transform.position.x > cachedGolfBall.transform.position.x;
@@ -62,6 +64,31 @@ public class Golfer : MonoBehaviour
         }
         rotatorParent.rotation = Quaternion.Lerp(rotatorParent.rotation, newquat, Time.deltaTime * 12f * mult);
 
+    }
+
+    public void ChargeAnimation(float value)
+    {
+        //value is from 0-1
+        if (value > 0.15f) animationFrame = 1;
+        if (value > 0.3f) animationFrame = 2;
+        else animationFrame = 0;
+        //yes, i know
+    }
+
+    public void ReleaseAnimation()
+    {
+        StartCoroutine(nameof(ReleaseAnimationCoroutine));
+    }
+
+    private IEnumerator ReleaseAnimationCoroutine()
+    {
+        animationFrame = 3;
+        yield return new WaitForSeconds(0.1f);
+        animationFrame = 4;
+        yield return new WaitForSeconds(0.1f);
+        animationFrame = 5;
+        /*yield return new WaitForSeconds(0.1f);
+        animationFrame = 0;*/
     }
 
     public void InitializeGolfer(Golfhole gh, Golfball gb)

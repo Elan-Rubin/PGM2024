@@ -63,8 +63,10 @@ public class Golfball : MonoBehaviour
         {
             if (!isReady && hitCounter > 0)
             {
+                if(inHole) SoundManager.Instance.PlaySoundEffect("golfHole");
                 Golfer.Instance.MoveToBall();
                 CameraManager.Instance.CenterCamera();
+                
             }
             isReady = true;
             return true;
@@ -105,15 +107,23 @@ public class Golfball : MonoBehaviour
         lr.SetPosition(1, (Vector2)transform.position + Vector2.ClampMagnitude(dir * power / 2, maxPower / 2));
         
         var pow = Vector2.ClampMagnitude(dir * power / 2, maxPower / 2).magnitude;
-        UIManager.Instance.UpdatePower(pow*2 / maxPower);
+        var pow2 = pow * 2 / maxPower;
+        UIManager.Instance.UpdatePower(pow2);
+
+        Golfer.Instance.ChargeAnimation(pow2);
+
         var cam = CameraManager.Instance;
-        cam.UpdateSize(pow * 2 / maxPower);
+        cam.UpdateSize(pow2);
     }
     private void DragRelease(Vector2 pos)
     {
         UIManager.Instance.UpdateStroke(++hitCounter);
         UIManager.Instance.UpdatePower(0);
         UIManager.Instance.BounceGolfer();
+
+        Golfer.Instance.ReleaseAnimation();
+
+        SoundManager.Instance.PlaySoundEffect("golfHit");
 
         CameraManager.Instance.ResetSize();
 
@@ -149,6 +159,11 @@ public class Golfball : MonoBehaviour
             rb.velocity = Vector2.zero;
             //gameObject.SetActive(false);
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        SoundManager.Instance.PlaySoundEffect("golfBall");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
