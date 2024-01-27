@@ -100,6 +100,8 @@ public class Golfball : MonoBehaviour
         Vector2 dir = (Vector2)transform.position - pos;
         lr.SetPosition(0, transform.position);
         lr.SetPosition(1, (Vector2)transform.position + Vector2.ClampMagnitude(dir * power / 2, maxPower / 2));
+
+        UIManager.Instance.UpdatePower(power / maxPower);
     }
     private void DragRelease(Vector2 pos)
     {
