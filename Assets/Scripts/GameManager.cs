@@ -27,12 +27,11 @@ public class GameManager : MonoBehaviour
         if (instance != null && instance != this) Destroy(gameObject);
         else instance = this;
 
-        InitializeLevels();
     }
 
     void Start()
     {
-
+        InitializeLevels();
     }
 
     void Update()
@@ -63,8 +62,6 @@ public class GameManager : MonoBehaviour
     private void LevelStart()
     {
         var l = levels[levelIndex];
-        Debug.Log(l.ToString());
-        Debug.Log(GetCurrentLevel().ToString());
         l.Golfhole.InitializeGolfhole(l.Golfball);
         l.Golfball.InitializeGolfball(l.Golfhole);
         Golfer.Instance.InitializeGolfer(l.Golfhole, l.Golfball); 

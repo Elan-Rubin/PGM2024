@@ -5,9 +5,7 @@ using DG.Tweening;
 
 public class Golfer : MonoBehaviour
 {
-    private static Golfer instance;
-    public static Golfer Instance { get { return instance; } }
-
+   
     private Golfhole cachedGolfHole;
     private Golfball cachedGolfBall;
 
@@ -17,6 +15,9 @@ public class Golfer : MonoBehaviour
     private Vector2 cachedOffset;
 
     bool rotating = false;
+
+    private static Golfer instance;
+    public static Golfer Instance { get { return instance; } }
 
     private void Awake()
     {
@@ -52,7 +53,7 @@ public class Golfer : MonoBehaviour
         {
             mult = .5f * (dist - 2);
         }
-        rotatorParent.rotation = Quaternion.Lerp(rotatorParent.rotation, newquat, Time.deltaTime * 20f * mult);
+        rotatorParent.rotation = Quaternion.Lerp(rotatorParent.rotation, newquat, Time.deltaTime * 12f * mult);
 
     }
 
