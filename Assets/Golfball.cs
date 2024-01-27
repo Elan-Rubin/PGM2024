@@ -17,8 +17,11 @@ public class Golfball : MonoBehaviour
     [SerializeField] private float power = 2f;
     [SerializeField] private float maxGoalSpeed = 4f;
 
+    private bool isReady;
     private bool isDragging;
     private bool inHole;
+
+    private int hitCounter;
 
     private float normalDrag;
 
@@ -40,8 +43,8 @@ public class Golfball : MonoBehaviour
         }*/
         var v = rb.velocity.magnitude;
         if (v < 0.4f)
-            rb.velocity = Vector2.zero; 
-        else if(v < 2f)
+            rb.velocity = Vector2.zero;
+        else if (v < 2f)
         {
             rb.drag += Time.deltaTime * 2f;
         }
@@ -54,7 +57,16 @@ public class Golfball : MonoBehaviour
 
     private bool IsReady()
     {
-        return rb.velocity.magnitude < 0.2f;
+        if (rb.velocity.magnitude < 0.2f)
+        {
+            if (!isReady && hitCounter > 0)
+            {
+                Golfer.Instance.MoveToBall();
+            }
+            isReady = true;
+            return true;
+        }
+        return false;
     }
 
     private void PlayerInput()
@@ -91,6 +103,9 @@ public class Golfball : MonoBehaviour
     }
     private void DragRelease(Vector2 pos)
     {
+        hitCounter++;
+        isReady = false;    
+
         Golfer.Instance.StopRotating();
 
         float distance = Vector2.Distance((Vector2)transform.position, pos);
