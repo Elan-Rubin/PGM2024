@@ -32,8 +32,6 @@ public class Golfball : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(rb.velocity.magnitude);
-
         PlayerInput();
 
         /*var dist = Vector2.Distance(transform.position, golfHolePosition);
@@ -101,11 +99,14 @@ public class Golfball : MonoBehaviour
         lr.SetPosition(0, transform.position);
         lr.SetPosition(1, (Vector2)transform.position + Vector2.ClampMagnitude(dir * power / 2, maxPower / 2));
 
-        UIManager.Instance.UpdatePower(power / maxPower);
+        var pow = Vector2.ClampMagnitude(dir * power / 2, maxPower / 2).magnitude;
+        UIManager.Instance.UpdatePower(pow*2 / maxPower);
     }
     private void DragRelease(Vector2 pos)
     {
-        hitCounter++;
+        UIManager.Instance.UpdateStroke(++hitCounter);
+        UIManager.Instance.UpdatePower(0);
+
         isReady = false;    
 
         Golfer.Instance.StopRotating();

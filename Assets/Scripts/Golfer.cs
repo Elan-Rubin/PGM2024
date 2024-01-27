@@ -39,10 +39,10 @@ public class Golfer : MonoBehaviour
         Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
 
         var dist = Vector2.Distance(mousePos, objectPos);
-        if (dist < 2f) return;
+        if (dist < 3f) return; //this might be the line of interest
 
-        mousePos.x = mousePos.x - objectPos.x;
-        mousePos.y = mousePos.y - objectPos.y;
+        mousePos.x -= objectPos.x;
+        mousePos.y -= objectPos.y;
 
         float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
         var newquat = Quaternion.Euler(new Vector3(0, 0, angle + 180));
