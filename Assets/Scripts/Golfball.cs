@@ -131,29 +131,24 @@ public class Golfball : MonoBehaviour
     }
     private void DragRelease(Vector2 pos)
     {
-        UIManager.Instance.UpdateStroke(++hitCounter);
         UIManager.Instance.UpdatePower(0);
         UIManager.Instance.BounceGolfer();
 
         Golfer.Instance.ReleaseAnimation();
-
-        SoundManager.Instance.PlaySoundEffect("golfHit");
-
         CameraManager.Instance.ResetSize();
-
         isReady = false;    
-
         Golfer.Instance.StopRotating();
-
-        float distance = Vector2.Distance((Vector2)transform.position, pos);
         isDragging = false;
         lr.positionCount = 0;
-        if (distance < 1f)
-        {
-            return;
+        
+        float distance = Vector2.Distance((Vector2)transform.position, pos);
+
+        if (distance > 1f) {
+            UIManager.Instance.UpdateStroke(++hitCounter);
+            SoundManager.Instance.PlaySoundEffect("golfHit");
+            Vector2 dir = (Vector2)transform.position - pos;
+            rb.velocity = Vector2.ClampMagnitude(dir * power, maxPower);
         }
-        Vector2 dir = (Vector2)transform.position - pos;
-        rb.velocity = Vector2.ClampMagnitude(dir * power, maxPower);
     }
 
     public void InitializeGolfball(Golfhole gh)
