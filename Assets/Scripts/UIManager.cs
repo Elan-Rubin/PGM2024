@@ -43,6 +43,13 @@ public class UIManager : MonoBehaviour
         strokeText.text = $"Stroke: {value}";
         strokeText.transform.DOPunchScale(Vector2.one * 0.15f, 0.1f);
     }
+
+    public void ResetStroke()
+    {
+        strokeText.text = "Stroke: 0";
+        opponentStrokeText.text = "Stroke: 0";
+    }
+
     public void UpdateOpponentStroke(int value)
     {
         opponentStrokeText.text = $"Stroke: {value}";
@@ -51,6 +58,8 @@ public class UIManager : MonoBehaviour
 
     public void BounceGolfer()
     {
+        return;
+        //this doesnt work
         golferImage.transform.DOPunchScale(Vector2.one * 0.15f, 0.1f);
         golferImage.transform.DOShakePosition(0.15f, 5).OnComplete(() =>
         {

@@ -28,6 +28,7 @@ public class Golfball : MonoBehaviour
 
     private float normalDrag;
     Material normalMat;
+    bool frogged;
 
     void Start()
     {
@@ -58,7 +59,11 @@ public class Golfball : MonoBehaviour
                 //this is ass code
                 if (element.Equals(LevelElement.Wind))
                 {
-                    rb.velocity += Vector2.right * Time.deltaTime * 1.5f;
+                    rb.velocity += Vector2.right * Time.deltaTime * 2f;
+                }
+                else if (element.Equals(LevelElement.StrongWind))
+                {
+                    rb.velocity += Vector2.right * Time.deltaTime * 5f;
                 }
 
 
@@ -86,6 +91,10 @@ public class Golfball : MonoBehaviour
             {
                 if (inHole)
                 {
+                    if(GameManager.Instance.Level == 2)
+                    {
+                        SoundManager.Instance.PlaySoundEffect("dialogue2.2");
+                    }
                     GameManager.Instance.LevelComplete();
                     SoundManager.Instance.PlaySoundEffect("golfHole");
                 }
@@ -159,6 +168,11 @@ public class Golfball : MonoBehaviour
         if (distance > 1f) {
             UIManager.Instance.UpdateStroke(++hitCounter);
 
+            if (GameManager.Instance.Level == 5 && hitCounter==1)
+            {
+                SoundManager.Instance.PlaySoundEffect("dialogue5.2");
+            }
+
             if (element.Equals(LevelElement.Exploding) && hitCounter == 3)
             {
                 GameManager.Instance.StopBeeping();
@@ -206,6 +220,7 @@ public class Golfball : MonoBehaviour
         //optimize later
         transform.DOPunchScale(Vector2.one * -0.15f, 0.15f);
         if (collision.tag.Equals("Golfhole")) CheckWinState();
+        else if (collision.tag.Equals("Wizard")) TurnToFrog();
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -214,14 +229,33 @@ public class Golfball : MonoBehaviour
     }
 
     //this code can be fixed later
+    
     public void TurnToFrog()
     {
+        if (frogged) return;
+        StartCoroutine(nameof(TurnToFrogCoroutine));
+    }
+    private IEnumerator TurnToFrogCoroutine()
+    {
+        frogged = true;
+        rb.velocity = Vector2.zero;
+        SoundManager.Instance.PlaySoundEffect("spell");
         transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-        transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.25f);
+        SoundManager.Instance.PlaySoundEffect("dialogue7.2");
     }
     public void Explode()
     {
+        StartCoroutine(nameof(ExplodeCoroutine));
+    }
+    private IEnumerator ExplodeCoroutine()
+    {
+        rb.velocity = Vector2.zero;
         transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-        transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+        SoundManager.Instance.PlaySoundEffect("explosion");
+        yield return new WaitForSeconds(0.5f);
+        SoundManager.Instance.PlaySoundEffect("dialogue4.2");
+        transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
     }
 }

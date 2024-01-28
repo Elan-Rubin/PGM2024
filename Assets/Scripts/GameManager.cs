@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<LevelInfo> levels = new();
     private int levelIndex = 0;
 
+    public int Level { get { return levelIndex + 1; } }
+
     bool beeping = true;
     public LevelInfo GetCurrentLevel()
     {
@@ -62,6 +64,41 @@ public class GameManager : MonoBehaviour
 
     private void LevelStart()
     {
+        //i will fix this later
+        switch (levelIndex + 1)
+        {
+            //2, 3, 4, 5, 6, 7, 8, 9, 10
+            case 2:
+                SoundManager.Instance.PlaySoundEffect("dialogue2.1");
+                break;
+            case 3:
+                SoundManager.Instance.PlaySoundEffect("dialogue3.1");
+                break;
+            case 4:
+                SoundManager.Instance.PlaySoundEffect("dialogue4.1");
+                break;
+            case 5:
+                SoundManager.Instance.PlaySoundEffect("dialogue5.1");
+                break;
+            case 6:
+                SoundManager.Instance.PlaySoundEffect("dialogue6.1");
+                break;
+            case 7:
+                SoundManager.Instance.PlaySoundEffect("dialogue7.1");
+                break;
+            case 8:
+                SoundManager.Instance.PlaySoundEffect("dialogue8.1");
+                break;
+            case 9:
+                SoundManager.Instance.PlaySoundEffect("dialogue9.1");
+                break;
+            case 10:
+                SoundManager.Instance.PlaySoundEffect("dialogue10.1");
+                break;
+        }
+
+
+        UIManager.Instance.ResetStroke();
         var l = levels[levelIndex];
         l.LevelGO.SetActive(true);
         
@@ -94,9 +131,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator BeepingCoroutine()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         SoundManager.Instance.PlaySoundEffect("beep");
-        StartCoroutine(nameof(BeepingCoroutine));
+        if(beeping) StartCoroutine(nameof(BeepingCoroutine));
     }
 
     public void StopBeeping() => StartCoroutine(nameof(StopBeepingCoroutine));
@@ -104,7 +141,7 @@ public class GameManager : MonoBehaviour
     {
         beeping = false;
         yield return new WaitForSeconds(1f);
-
+        GetCurrentLevel().Golfball.Explode();
     }
 
     public void LevelComplete() => StartCoroutine(nameof(LevelCompleteCoroutine));
