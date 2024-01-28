@@ -176,6 +176,7 @@ public class Golfball : MonoBehaviour
     {
         SoundManager.Instance.PlaySoundEffect("golfBall");
         transform.GetChild(0).GetComponent<SpriteRenderer>().material = whiteMat;
+        transform.scale = Vector2.one;
         //optimize later
         transform.DOPunchScale(Vector2.one * 0.15f, 0.15f).OnComplete(() =>
         {
