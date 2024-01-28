@@ -69,6 +69,8 @@ public class Golfball : MonoBehaviour
         {
             transform.position = Vector2.Lerp(transform.position, golfHolePosition, Time.deltaTime * 10f);
         }
+
+        CameraManager.Instance.CenterCamera();
     }
 
     private bool IsReady()
