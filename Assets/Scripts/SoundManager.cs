@@ -50,6 +50,15 @@ public class SoundManager : MonoBehaviour
         source.pitch += 0.05f * modifier; 
         source.Play();
     }
+
+    public float SoundLength(string soundName)
+    {
+        var matchingEffects = soundEffects.Where(s => s.SoundName.Equals(soundName)).ToList();
+        if (matchingEffects.Count == 0) return 0;
+        var soundEffect = matchingEffects[Random.Range(0, matchingEffects.Count)];
+        var chosenClip = soundEffect.Clips[Random.Range(0, soundEffect.Clips.Count)];
+        return chosenClip.length;
+    }
 }
 
 [System.Serializable]

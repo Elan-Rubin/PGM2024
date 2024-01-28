@@ -115,7 +115,7 @@ public class Golfball : MonoBehaviour
         Vector2 inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float distance = Vector2.Distance(transform.position, inputPos);
 
-        if (Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart();
+        if (Input.GetMouseButtonDown(0) && distance <= 4f) DragStart();
         if (Input.GetMouseButton(0) && isDragging) DragChange(inputPos);
         if (Input.GetMouseButtonUp(0) && isDragging) DragRelease(inputPos);
     }
@@ -212,13 +212,14 @@ public class Golfball : MonoBehaviour
         transform.DOPunchScale(Vector2.one * 0.15f, 0.15f).OnComplete(() =>
         {
             transform.GetChild(0).GetComponent<SpriteRenderer>().material = normalMat;
+            transform.localScale = Vector3.one;
         });
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //optimize later
-        transform.DOPunchScale(Vector2.one * -0.15f, 0.15f);
+        //transform.DOPunchScale(Vector2.one * -0.15f, 0.15f);
         if (collision.tag.Equals("Golfhole")) CheckWinState();
         else if (collision.tag.Equals("Wizard")) TurnToFrog();
     }
@@ -244,6 +245,8 @@ public class Golfball : MonoBehaviour
         transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
         yield return new WaitForSeconds(0.25f);
         SoundManager.Instance.PlaySoundEffect("dialogue7.2");
+        GameManager.Instance.LevelComplete();
+
     }
     public void Explode()
     {
@@ -257,5 +260,6 @@ public class Golfball : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         SoundManager.Instance.PlaySoundEffect("dialogue4.2");
         transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+        GameManager.Instance.LevelComplete();
     }
 }
