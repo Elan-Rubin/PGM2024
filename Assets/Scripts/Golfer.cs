@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
 public class Golfer : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class Golfer : MonoBehaviour
 
         golferSR.flipY = false;
         if (!rotating) return; //this is bad code
-        golferSR.flipY = transform.position.x > cachedGolfBall.transform.position.x;
+        golferSR.flipY = transform.position.x > cachedGolfBall.transform.position.x && !golferSR.flipX;
 
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 5.23f;
@@ -103,13 +104,17 @@ public class Golfer : MonoBehaviour
     {
         var pos = transform.position;
         var ballPos = cachedGolfBall.transform.position;
-        var offset = 0.75f * (ballPos.x > pos.x ? Vector2.left : Vector2.right);
+        var offset = 0.75f * (cachedGolfHole.transform.position.x > ballPos.x ? new Vector2(-1.83f, 0.74f) : new Vector2(1.83f, 0.74f));
         cachedOffset = offset;
+        Debug.Log(offset);
         if (teleport) transform.position = (Vector2)ballPos + offset;
         else
         {
-            Debug.LogError("This called.");
-            transform.DOMove((Vector2)ballPos + offset, Vector2.Distance(ballPos, pos) / 7f);
+            transform.DOMove((Vector2)ballPos + offset, Vector2.Distance(ballPos, pos) / 7f).OnComplete(() =>
+            {
+                animationFrame = 0;
+                golferSR.flipX = ballPos.x < transform.position.x;
+            });
         }
     }
 

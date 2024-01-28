@@ -32,7 +32,7 @@ public class Golfhole : MonoBehaviour
         }
         if (dist < 1f)
         {
-            targetColor = Color.clear;
+            targetColor = new Color(1,1,1,0);
         }
         else targetColor = Color.white;
 

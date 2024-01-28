@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image powerCircle;
     private float currentFill, targetFill;
     [SerializeField] private TextMeshProUGUI strokeText;
+    [SerializeField] private TextMeshProUGUI opponentStrokeText;
     [SerializeField] private Image golferImage;
+    [SerializeField] private Image overlayImage;
     private static UIManager instance;
     public static UIManager Instance { get { return instance; } }
     private void Awake()
@@ -39,8 +42,13 @@ public class UIManager : MonoBehaviour
 
     public void UpdateStroke(int value)
     {
-        strokeText.text = $"Stroke: {value:00}";
+        strokeText.text = $"Stroke: {value}";
         strokeText.transform.DOPunchScale(Vector2.one * 0.15f, 0.1f);
+    }
+    public void UpdateOpponentStroke(int value)
+    {
+        opponentStrokeText.text = $"Stroke: {value}";
+        opponentStrokeText.transform.DOPunchScale(Vector2.one * 0.15f, 0.1f);
     }
 
     public void BounceGolfer()
@@ -50,5 +58,16 @@ public class UIManager : MonoBehaviour
         {
             golferImage.transform.localPosition = Vector2.zero;
         });
+    }
+
+    public void FadeIn()
+    {
+        overlayImage.color = Color.black;
+        overlayImage.DOFade(0, 0.25f);
+    }
+    public void FadeOut()
+    {
+        overlayImage.color = Color.clear;
+        overlayImage.DOFade(1, 0.25f);
     }
 }

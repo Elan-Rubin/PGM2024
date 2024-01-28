@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -49,6 +47,8 @@ public class GameManager : MonoBehaviour
 
             var l = new Level(n, g, h.GetComponent<Golfhole>(), b.GetComponent<Golfball>());
             levels.Add(l);
+
+            child.gameObject.SetActive(false);
         }
 
         /*foreach(var l in levels)
@@ -61,10 +61,13 @@ public class GameManager : MonoBehaviour
     private void LevelStart()
     {
         var l = levels[levelIndex];
+        l.LevelGO.SetActive(true);
+        
         l.Golfhole.InitializeGolfhole(l.Golfball);
         l.Golfball.InitializeGolfball(l.Golfhole);
         Golfer.Instance.InitializeGolfer(l.Golfhole, l.Golfball);
         CameraManager.Instance.CenterCamera();
+        UIManager.Instance.FadeIn();
     }
 
     public void LevelComplete()
@@ -72,6 +75,8 @@ public class GameManager : MonoBehaviour
         LevelCompletedEvent.Invoke();
 
         levelIndex++;
+        UIManager.Instance.FadeOut();
+        LevelStart();
     }
 
     [System.Serializable]
