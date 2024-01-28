@@ -33,7 +33,6 @@ public class Golfball : MonoBehaviour
     {
         normalDrag = rb.drag;
         normalMat = transform.GetChild(0).GetComponent<SpriteRenderer>().material;
-
     }
 
     void Update()
@@ -51,9 +50,18 @@ public class Golfball : MonoBehaviour
             var v = rb.velocity.magnitude;
             if (v < 0.4f)
                 rb.velocity = Vector2.zero;
-            else if (v < 2f)
+            else
             {
-                rb.drag += Time.deltaTime * 2f;
+
+                //wind is applied here!!
+
+                rb.velocity += Vector2.right * Time.deltaTime * 4f;
+
+                if (v < 2f)
+                {
+                    rb.drag += Time.deltaTime * 2f;
+
+                }
             }
         }
         
