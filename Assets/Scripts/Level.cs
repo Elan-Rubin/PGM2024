@@ -18,6 +18,7 @@ public class Level : MonoBehaviour
 }
 public enum LevelElement
 {
+    Nothing,
     Wind,
     Beeping,
     Exploding,
