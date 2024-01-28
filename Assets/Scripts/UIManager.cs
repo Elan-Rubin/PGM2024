@@ -34,7 +34,6 @@ public class UIManager : MonoBehaviour
 
     public void UpdatePower(float value)
     {
-        Debug.Log($"updatepower, {value}");
         //this is expensive
         targetFill = value;
     }

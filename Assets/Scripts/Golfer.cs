@@ -48,15 +48,17 @@ public class Golfer : MonoBehaviour
 
         Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
 
-        var dist = Vector2.Distance(mousePos, objectPos);
-        if (dist < 3f) return; //this might be the line of interest
-
         selectedAnimation = (mousePos.y < objectPos.y) ? 0 : 1; 
 
         mousePos.x -= objectPos.x;
         mousePos.y -= objectPos.y;
 
-        float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+        var dist = Vector2.Distance(mousePos, objectPos);
+        
+        // if (dist > 2000f) {
+        //     angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+        //     oldAngle = angle;
+        // }
         var newquat = Quaternion.Euler(new Vector3(0, 0, angle + 180));
 
         //what if its between 2 and 4??
@@ -67,7 +69,7 @@ public class Golfer : MonoBehaviour
         {
             mult = .5f * (dist - 2);
         }
-        rotatorParent.rotation = Quaternion.Lerp(rotatorParent.rotation, newquat, Time.deltaTime * 12f * mult);
+        rotatorParent.rotation = newquat;
 
     }
 
@@ -110,7 +112,6 @@ public class Golfer : MonoBehaviour
         var ballPos = cachedGolfBall.transform.position;
         var offset = 0.75f * (cachedGolfHole.transform.position.x > ballPos.x ? new Vector2(-1.83f, 0.74f) : new Vector2(1.83f, 0.74f));
         cachedOffset = offset;
-        Debug.Log(offset);
         if (teleport) transform.position = (Vector2)ballPos + offset;
         else
         {
