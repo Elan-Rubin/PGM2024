@@ -50,7 +50,8 @@ public class CameraManager : MonoBehaviour
         var l = GameManager.Instance.GetCurrentLevel();
         var h = l.Golfhole.transform.position;
         var b = l.Golfball.transform.position;
-        MoveCamera((h+b)/2f);
+        MoveCamera(Vector2.Lerp(h, b, 0.8f));
+        //MoveCamera((h+b)/2f);
     }
     public void MoveCamera(Vector3 pos)
     {

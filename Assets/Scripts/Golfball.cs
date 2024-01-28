@@ -1,6 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Golfball : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class Golfball : MonoBehaviour
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] LineRenderer lr;
+    [SerializeField] private Material whiteMat;
 
     [Header("Attributes")]
     [SerializeField] private float maxPower = 10f;
@@ -164,14 +167,24 @@ public class Golfball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         SoundManager.Instance.PlaySoundEffect("golfBall");
+        var mat = transform.GetChild(0).GetComponent<SpriteRenderer>().material;
+        transform.GetChild(0).GetComponent<SpriteRenderer>().material = whiteMat;
+        //optimize later
+        transform.DOPunchScale(Vector2.one * 0.15f, 0.15f).OnComplete(() =>
+        {
+            transform.GetChild(0).GetComponent<SpriteRenderer>().material = mat;
+        });
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //optimize later
+        transform.DOPunchScale(Vector2.one * -0.15f, 0.15f);
         if (collision.tag.Equals("Golfhole")) CheckWinState();
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
+        //transform.DOPunchScale(Vector2.one * -0.15f, 0.15f);
         if (collision.tag.Equals("Golfhole")) CheckWinState();
     }
 }
