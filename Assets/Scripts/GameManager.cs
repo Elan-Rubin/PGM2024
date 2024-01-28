@@ -6,9 +6,11 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject levelsParent; 
-    [SerializeField] private List<Level> levels = new();
+    [SerializeField] private List<LevelInfo> levels = new();
     private int levelIndex = 0;
-    public Level GetCurrentLevel()
+
+    bool beeping = true;
+    public LevelInfo GetCurrentLevel()
     {
         return levels[levelIndex];
     }
@@ -45,7 +47,7 @@ public class GameManager : MonoBehaviour
             var h = HelperClass.FindChildWithTag(child.gameObject, "Golfhole");
             var b = HelperClass.FindChildWithTag(child.gameObject, "Golfball");
 
-            var l = new Level(n, g, h.GetComponent<Golfhole>(), b.GetComponent<Golfball>());
+            var l = new LevelInfo(n, g, h.GetComponent<Golfhole>(), b.GetComponent<Golfball>());
             levels.Add(l);
 
             child.gameObject.SetActive(false);
@@ -68,19 +70,61 @@ public class GameManager : MonoBehaviour
         Golfer.Instance.InitializeGolfer(l.Golfhole, l.Golfball);
         CameraManager.Instance.CenterCamera();
         UIManager.Instance.FadeIn();
+
+        var element = l.LevelGO.GetComponent<Level>().Element;
+        switch (element)
+        {
+            case LevelElement.Wind:
+
+                break;
+            case LevelElement.Beeping:
+                StartCoroutine(nameof(BeepingCoroutine));
+                beeping = true;
+                break;
+            case LevelElement.Exploding:
+                break;
+            case LevelElement.StrongWind:
+                break;
+            case LevelElement.Wizard:
+                break;
+            case LevelElement.Streaker:
+                break;
+        }
     }
 
-    public void LevelComplete()
+    private IEnumerator BeepingCoroutine()
     {
-        LevelCompletedEvent.Invoke();
+        yield return new WaitForSeconds(0.5f);
+        SoundManager.Instance.PlaySoundEffect("beep");
+        StartCoroutine(nameof(BeepingCoroutine));
+    }
+
+    public void StopBeeping() => StartCoroutine(nameof(StopBeepingCoroutine));
+    private IEnumerator StopBeepingCoroutine()
+    {
+        beeping = false;
+        yield return new WaitForSeconds(1f);
+
+    }
+
+    public void LevelComplete() => StartCoroutine(nameof(LevelCompleteCoroutine));
+    private IEnumerator LevelCompleteCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        //LevelCompletedEvent.Invoke();
+        //disable previous level
+        levels[levelIndex].LevelGO.SetActive(false);
 
         levelIndex++;
         UIManager.Instance.FadeOut();
+        yield return new WaitForSeconds(0.75f);
+
         LevelStart();
     }
 
     [System.Serializable]
-    public class Level
+    public class LevelInfo
     {
         private string name;
         [SerializeField] private string levelName;
@@ -89,7 +133,7 @@ public class GameManager : MonoBehaviour
         public Golfball Golfball;
         public Golfhole Golfhole;
 
-        public Level(string name, GameObject GO, Golfhole hole, Golfball ball)
+        public LevelInfo(string name, GameObject GO, Golfhole hole, Golfball ball)
         {
             levelName = name;
             levelGO = GO;

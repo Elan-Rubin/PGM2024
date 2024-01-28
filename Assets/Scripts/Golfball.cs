@@ -37,6 +37,9 @@ public class Golfball : MonoBehaviour
 
     void Update()
     {
+        //this needs to be optimized later please
+        var element = GameManager.Instance.GetCurrentLevel().LevelGO.GetComponent<Level>().Element;
+
         PlayerInput();
 
         /*var dist = Vector2.Distance(transform.position, golfHolePosition);
@@ -52,10 +55,12 @@ public class Golfball : MonoBehaviour
                 rb.velocity = Vector2.zero;
             else
             {
+                //this is ass code
+                if (element.Equals(LevelElement.Wind))
+                {
+                    rb.velocity += Vector2.right * Time.deltaTime * 1.5f;
+                }
 
-                //wind is applied here!!
-
-                rb.velocity += Vector2.right * Time.deltaTime * 4f;
 
                 if (v < 2f)
                 {
@@ -79,7 +84,11 @@ public class Golfball : MonoBehaviour
         {
             if (!isReady && hitCounter > 0)
             {
-                if(inHole) SoundManager.Instance.PlaySoundEffect("golfHole");
+                if (inHole)
+                {
+                    GameManager.Instance.LevelComplete();
+                    SoundManager.Instance.PlaySoundEffect("golfHole");
+                }
                 Golfer.Instance.MoveToBall();
                 CameraManager.Instance.CenterCamera();
                 
@@ -133,6 +142,8 @@ public class Golfball : MonoBehaviour
     }
     private void DragRelease(Vector2 pos)
     {
+        var element = GameManager.Instance.GetCurrentLevel().LevelGO.GetComponent<Level>().Element;
+
         UIManager.Instance.UpdatePower(0);
         UIManager.Instance.BounceGolfer();
 
@@ -147,6 +158,12 @@ public class Golfball : MonoBehaviour
 
         if (distance > 1f) {
             UIManager.Instance.UpdateStroke(++hitCounter);
+
+            if (element.Equals(LevelElement.Exploding) && hitCounter == 3)
+            {
+                GameManager.Instance.StopBeeping();
+            }
+
             SoundManager.Instance.PlaySoundEffect("golfHit");
             Vector2 dir = (Vector2)transform.position - pos;
             rb.velocity = Vector2.ClampMagnitude(dir * power, maxPower);
@@ -176,7 +193,7 @@ public class Golfball : MonoBehaviour
     {
         SoundManager.Instance.PlaySoundEffect("golfBall");
         transform.GetChild(0).GetComponent<SpriteRenderer>().material = whiteMat;
-        transform.scale = Vector2.one;
+        transform.localScale = Vector2.one;
         //optimize later
         transform.DOPunchScale(Vector2.one * 0.15f, 0.15f).OnComplete(() =>
         {
@@ -194,5 +211,17 @@ public class Golfball : MonoBehaviour
     {
         //transform.DOPunchScale(Vector2.one * -0.15f, 0.15f);
         if (collision.tag.Equals("Golfhole")) CheckWinState();
+    }
+
+    //this code can be fixed later
+    public void TurnToFrog()
+    {
+        transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+        transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+    }
+    public void Explode()
+    {
+        transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+        transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
     }
 }
