@@ -59,7 +59,7 @@ public class Golfer : MonoBehaviour
         //     angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
         //     oldAngle = angle;
         // }
-        var newquat = Quaternion.Euler(new Vector3(0, 0, angle + 180));
+        var newquat = Quaternion.Euler(new Vector3(0, 0, 180));
 
         //what if its between 2 and 4??
 
