@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,14 +59,18 @@ public class UIManager : MonoBehaviour
         });
     }
 
-    public void FadeIn()
+    public void FadeIn() => StartCoroutine(nameof(FadeInCoroutine));
+    private IEnumerator FadeInCoroutine()
     {
         overlayImage.color = Color.black;
+        yield return new WaitForSeconds(0.5f);
         overlayImage.DOFade(0, 0.25f);
     }
-    public void FadeOut()
+    public void FadeOut() => StartCoroutine(nameof(FadeOutCoroutine));
+    private IEnumerator FadeOutCoroutine()
     {
         overlayImage.color = Color.clear;
+        yield return new WaitForSeconds(0.5f);
         overlayImage.DOFade(1, 0.25f);
     }
 }

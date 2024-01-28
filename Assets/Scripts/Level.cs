@@ -21,8 +21,6 @@ public enum LevelElement
     Beeping,
     Exploding,
     StrongWind,
-    //Bird,
-    //Beer,
     Wizard,
     Streaker,
 }

@@ -27,10 +27,13 @@ public class Golfball : MonoBehaviour
     private int hitCounter;
 
     private float normalDrag;
+    Material normalMat;
 
     void Start()
     {
         normalDrag = rb.drag;
+        normalMat = transform.GetChild(0).GetComponent<SpriteRenderer>().material;
+
     }
 
     void Update()
@@ -167,12 +170,11 @@ public class Golfball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         SoundManager.Instance.PlaySoundEffect("golfBall");
-        var mat = transform.GetChild(0).GetComponent<SpriteRenderer>().material;
         transform.GetChild(0).GetComponent<SpriteRenderer>().material = whiteMat;
         //optimize later
         transform.DOPunchScale(Vector2.one * 0.15f, 0.15f).OnComplete(() =>
         {
-            transform.GetChild(0).GetComponent<SpriteRenderer>().material = mat;
+            transform.GetChild(0).GetComponent<SpriteRenderer>().material = normalMat;
         });
     }
 

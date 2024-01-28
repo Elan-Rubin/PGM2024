@@ -51,6 +51,8 @@ public class Golfer : MonoBehaviour
         var dist = Vector2.Distance(mousePos, objectPos);
         if (dist < 3f) return; //this might be the line of interest
 
+        selectedAnimation = (mousePos.y < objectPos.y) ? 0 : 1; 
+
         mousePos.x -= objectPos.x;
         mousePos.y -= objectPos.y;
 
@@ -58,6 +60,8 @@ public class Golfer : MonoBehaviour
         var newquat = Quaternion.Euler(new Vector3(0, 0, angle + 180));
 
         //what if its between 2 and 4??
+
+        //im becoming homicidal :(
         float mult = 1;
         if (dist < 2f && dist > 4)
         {
