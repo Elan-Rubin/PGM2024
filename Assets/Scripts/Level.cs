@@ -5,6 +5,7 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     [SerializeField] private LevelElement element = LevelElement.Wind;
+    public LevelElement Element { get { return element; } }
     void Start()
     {
         
