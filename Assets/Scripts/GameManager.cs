@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     public int Level { get { return levelIndex + 1; } }
 
     bool beeping = true;
+
+    private List<int> opponentScores = new() { 1, 2, 1, 2, 1, 1, 2, 1, 1, 2 };
+
     public LevelInfo GetCurrentLevel()
     {
         return levels[levelIndex];
@@ -147,7 +150,28 @@ public class GameManager : MonoBehaviour
     public void LevelComplete() => StartCoroutine(nameof(LevelCompleteCoroutine));
     private IEnumerator LevelCompleteCoroutine()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
+
+        UIManager.Instance.UpdateOpponentStroke(opponentScores[levelIndex + 1]);
+        if (levelIndex == 1)//2
+        {
+            yield return new WaitForSeconds(7f);
+        }
+        if (levelIndex == 3)//4
+        {
+            UIManager.Instance.UpdateStroke(14);
+
+            yield return new WaitForSeconds(8f);
+        }
+        else if(levelIndex==4)//5
+        {
+            yield return new WaitForSeconds(16f);
+        }
+        else if(levelIndex==6)//7
+        {
+            UIManager.Instance.UpdateStroke(14);
+        }
+
 
         //LevelCompletedEvent.Invoke();
         //disable previous level
