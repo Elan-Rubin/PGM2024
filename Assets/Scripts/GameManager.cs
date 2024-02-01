@@ -71,6 +71,9 @@ public class GameManager : MonoBehaviour
         switch (levelIndex + 1)
         {
             //2, 3, 4, 5, 6, 7, 8, 9, 10
+            case 1:
+                SoundManager.Instance.PlaySoundEffect("dialogue1.1");
+                break;
             case 2:
                 SoundManager.Instance.PlaySoundEffect("dialogue2.1");
                 break;
@@ -150,22 +153,28 @@ public class GameManager : MonoBehaviour
     public void LevelComplete() => StartCoroutine(nameof(LevelCompleteCoroutine));
     private IEnumerator LevelCompleteCoroutine()
     {
-        yield return new WaitForSeconds(1f);
-
         UIManager.Instance.UpdateOpponentStroke(opponentScores[levelIndex + 1]);
+
+        while (SoundManager.Instance.PlayingDialogue)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(3f);
+
         if (levelIndex == 1)//2
         {
-            yield return new WaitForSeconds(7f);
+            //yield return new WaitForSeconds(7f);
         }
         if (levelIndex == 3)//4
         {
             UIManager.Instance.UpdateStroke(14);
 
-            yield return new WaitForSeconds(8f);
+            //yield return new WaitForSeconds(8f);
         }
         else if(levelIndex==4)//5
         {
-            yield return new WaitForSeconds(16f);
+            //yield return new WaitForSeconds(16f);
         }
         else if(levelIndex==6)//7
         {

@@ -16,6 +16,8 @@ public class SoundManager : MonoBehaviour
         else instance = this;
     }
 
+    public bool PlayingDialogue = false;
+
     [SerializeField] private List<SoundEffect> soundEffects;
     //public void OnValidate()
     //{
@@ -49,6 +51,14 @@ public class SoundManager : MonoBehaviour
         if (soundEffect.Vary) source.pitch += Random.Range(-0.1f, 0.1f);
         source.pitch += 0.05f * modifier; 
         source.Play();
+
+        if (soundName.Contains("dialogue")) StartCoroutine(nameof(Dialogue), chosenClip.length);
+    }
+    private IEnumerator Dialogue(float dur)
+    {
+        PlayingDialogue = true;
+        yield return new WaitForSeconds(dur);
+        PlayingDialogue = false;
     }
 
     public float SoundLength(string soundName)
